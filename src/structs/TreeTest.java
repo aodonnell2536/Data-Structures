@@ -11,9 +11,13 @@ public class TreeTest {
 		tree.insert(1);
 		tree.insert(7);
 		
-		tree.display();
+		tree.preorder();
 		
-		System.out.println("\n" + tree.size());
+		System.out.println("\n" + tree.size() + "\n");
+		
+		tree.delete(8);
+		
+		tree.preorder();
 		
 		
 	}

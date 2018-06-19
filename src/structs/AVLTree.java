@@ -2,19 +2,23 @@ package structs;
 
 import java.util.InputMismatchException;
 
-public class AVLTree<T extends Comparable<T>> {
+/***
+ * Simple AVL Tree implementation in Java.
+ * 
+ * @author Austin O'Donnell
+ *
+ * @param <E> The type of element held by the tree.
+ * 			  Must implement <code>java.util.Comparable<E>.
+ */
+public class AVLTree<E extends Comparable<E>> {
 
-	/**
-	 * 
-	 * @param <T> The type of 
-	 */
-	private class Node<T> {
+	private class Node {
 		
-		T value;
+		E value;
 		int height;
-		Node<T> left, right;
+		Node left, right;
 		
-		Node(T val) {
+		Node(E val) {
 			value = val;
 			height = 1;
 			left = right = null;
@@ -25,7 +29,7 @@ public class AVLTree<T extends Comparable<T>> {
 	/*
 	 * Fields
 	 */
-	private Node<T> root;
+	private Node root;
 	private int size;
 	
 	/*
@@ -40,7 +44,7 @@ public class AVLTree<T extends Comparable<T>> {
 	 * Wrapper function to insert a value into the tree
 	 * @param value The value to be added to the tree
 	 */
-	public void insert(T value) { 
+	public void insert(E value) { 
 		root = insert(root, value); 
 		size += 1;
 	}
@@ -54,10 +58,10 @@ public class AVLTree<T extends Comparable<T>> {
 	 * @return The updated (sub)tree after the value has been added, heights have
 	 * been updated, and nodes have been rotated
 	 */
-	private Node<T> insert(Node<T> node, T value) {
+	private Node insert(Node node, E value) {
 		
 		if (node == null)
-			return new Node<>(value);
+			return new Node(value);
 		
 		if (value.compareTo(node.value) < 0) 
 			node.left = insert(node.left, value);
@@ -91,39 +95,60 @@ public class AVLTree<T extends Comparable<T>> {
 		return node;
 	}
 	
-	private void delete(T value) {
-	
-		delete(root, value);
-		
+	/**
+	 * 
+	 * @param value The value to be deleted from the tree
+	 */
+	public void delete(E value) {
+		root = delete(root, value);
+		size -= 1;
 	}
 	
-	private Node<T> delete(Node<T> node, T value) {
+	private Node delete(Node node, 
+						E value) {
 		
 		if (value.compareTo(node.value) < 0)
 			node.left = delete(node.left, value);
 		else if (value.compareTo(node.value) > 0)
 			node.right = delete(node.right, value);
-		else
-			removeAndReplace(node);
-		
-	}
-	
-	private Node<T> removeAndReplace(Node<T> node) {
-		
-		if (node.left == null && node.right == null)		// No children
-			return null;
-		
-		// Check for successor node switch first, then predecessor
-		else if (node.right != null) {
+		else if (node.left != null && node.right != null) {
 			
-			// Finding the successor node
-			Node<T> successor = node.right;
-			while (successor.left != null)
-				successor = successor.left;
+			Node succ = node.right;
+			while (succ.left != null)
+				succ = succ.left;
 			
-			
+			node.value = succ.value;
+			node.right = delete(node.right, succ.value);
 			
 		}
+		else if (node.left != null)
+			return node.left;
+		else
+			return null;
+		
+		node.height = 1 + Math.max(height(node.left), height(node.right));
+		
+		int balanceFactor = balance(node);
+		
+		// Left heavy
+		if (balanceFactor > 1) {
+			if (value.compareTo(node.left.value) < 0)	// Left-Left
+				return rightRotate(node);
+			else {	// Left-Right
+				node.left = leftRotate(node.left);
+				return rightRotate(node);
+			}	
+		}
+		else if (balanceFactor < -1) {
+			if (value.compareTo(node.right.value) > 0) // Right-Right
+				return leftRotate(node);
+			else {
+				node.right = rightRotate(node.right);
+				return leftRotate(node);
+			}
+		}
+		
+		return node;
 		
 	}
 	
@@ -132,13 +157,13 @@ public class AVLTree<T extends Comparable<T>> {
 	 * @param node The pivot node of the rotation
 	 * @return The updated node at the same position of the pivot node
 	 */
-	private Node<T> rightRotate(Node<T> node) {
+	private Node rightRotate(Node node) {
 		
 		if (node.left == null)
 			throw new InputMismatchException("Cannot right rotate node when it has no left child.");
 		
-		Node<T> temp1 = node.left;
-		Node<T> temp2 = temp1.right;
+		Node temp1 = node.left;
+		Node temp2 = temp1.right;
 		
 		node.left = temp2;
 		temp1.right = node;
@@ -155,13 +180,13 @@ public class AVLTree<T extends Comparable<T>> {
 	 * @param node The pivot node of the rotation
 	 * @return The updated node at the same position of the pivot node
 	 */
-	private Node<T> leftRotate(Node<T> node) {
+	private Node leftRotate(Node node) {
 		
 		if (node.right == null)
 			throw new InputMismatchException("Cannot left rotate node when it has no right child.");
 		
-		Node<T> temp1 = node.right;
-		Node<T> temp2 = temp1.left;
+		Node temp1 = node.right;
+		Node temp2 = temp1.left;
 		
 		node.right = temp2;
 		temp1.left = node;
@@ -192,7 +217,7 @@ public class AVLTree<T extends Comparable<T>> {
 	 * Inner function to display the elements of the tree in order
 	 * @param node The current node in the recursive sequence. Originally passed as the root node.
 	 */
-	private void display(Node<T> node) {
+	private void display(Node node) {
 		
 		if (node == null) return;
 		
@@ -207,7 +232,7 @@ public class AVLTree<T extends Comparable<T>> {
 	 * @param n The root node of the subtree in question
 	 * @return The height of the subtree, or 0 if the root is null
 	 */
-	private int height(Node<T> n) {
+	private int height(Node n) {
 		if (n == null) return 0;
 		return n.height;
 	}
@@ -217,12 +242,25 @@ public class AVLTree<T extends Comparable<T>> {
 	 * @param n The root node of the subtree in question
 	 * @return The balance factor of the subtree (height of left - height of right), or 0 if the root is null
 	 */
-	private int balance(Node<T> n) {
+	private int balance(Node n) {
 		if (n == null) return 0;
 		return height(n.left) - height(n.right);
 	}
 	
-	public int size() { return size; }
+	public void preorder() {
+		preorder(root);
+	}
 	
+	private void preorder(Node node) {
+		
+		if (node == null) return;
+		
+		System.out.println(node.value);
+		preorder(node.left);
+		preorder(node.right);
+		
+	}
+	
+	public int size() { return size; }
 	
 }
