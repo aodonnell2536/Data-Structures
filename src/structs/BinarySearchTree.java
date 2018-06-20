@@ -2,7 +2,8 @@ package structs;
 
 import java.util.InputMismatchException;
 
-public abstract class BinarySearchTree<E extends Comparable<E>> {
+public abstract class BinarySearchTree<E extends Comparable<E>> 
+					  extends Tree<E>{
 
 	/*
 	 * Fields

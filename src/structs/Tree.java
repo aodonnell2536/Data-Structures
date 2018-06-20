@@ -8,6 +8,7 @@ package structs;
 public abstract class Tree<E> {
 
 	protected int degree;
+	protected Node root;
 	
 	/**
 	 * Insert a value into the tree
@@ -15,7 +16,7 @@ public abstract class Tree<E> {
 	 * @param value The value to insert into the tree
 	 * @return A root node of an updated tree with the value inserted
 	 */
-	public abstract Node insert(E value);
+	public abstract void insert(E value);
 	
 	/**
 	 * Delete a value from the tree
@@ -23,7 +24,7 @@ public abstract class Tree<E> {
 	 * @param value The value to delete from the tree
 	 * @return A root node of an updated tree with the value deleted
 	 */
-	public abstract Node delete(E value);
+	public abstract void delete(E value);
 	
 	/**
 	 * A data type holding both a value, and a list of references to the
