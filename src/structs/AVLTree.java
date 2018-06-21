@@ -11,7 +11,7 @@ import java.util.InputMismatchException;
  * 			  Must implement java.util.Comparable<E>.
  */
 public class AVLTree<E extends Comparable<E>> 
-			 					extends BST<E> {
+			 					extends BinarySearchTree<E> {
 	
 	/*
 	 * Constructor

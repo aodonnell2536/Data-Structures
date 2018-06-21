@@ -1,158 +1,136 @@
 package structs;
 
-// TODO : Make this a binary tree, and create separate 
-//		  file for a binary search tree class with a comparator
+import java.util.Comparator;
+import java.util.List;
 
-/***
- * Abstract implementation of a Binary Search Tree
- * 
- * @author Austin O'Donnell
- * @param <E> 
- */
-public abstract class BinarySearchTree<E extends Comparable<E>> 
-					  									extends Tree<E>{
+public class BinarySearchTree<E extends Comparable<E>> 
+								extends BinaryTree<E> {
 
-	/*
-	 * Fields
+	/**
+	 * 
 	 */
-	protected Node root;		// The root node of the tree
-	protected int size;			// The amount of nodes currently in the tree
+	protected Comparator<E> comparator;
 	
 	/**
-	 * Wrapper function to insert the given value into the tree
-	 * starting at the root
 	 * 
-	 * @param value
 	 */
+	public BinarySearchTree() {
+		size = 0;
+		root = null;
+		this.comparator = (o1, o2) -> o1.compareTo(o2);
+	}
+	
+	/**
+	 * 
+	 * @param comparator
+	 */
+	public BinarySearchTree(Comparator<E> comparator) {
+		size = 0;
+		root = null;
+		this.comparator = comparator;
+	}
+	
+	/**
+	 * 
+	 * @param elements
+	 */
+	public BinarySearchTree(List<E> elements) {
+		
+		size = 0;
+		root = null;
+		this.comparator = (o1, o2) -> o1.compareTo(o2);
+		
+		for (E val : elements)
+			root = insert(root, val);
+		
+	}
+	
+	/**
+	 * 
+	 * @param elements
+	 * @param comparator
+	 */
+	public BinarySearchTree(List<E> elements, Comparator<E> comparator) {
+		
+		size = 0;
+		root = null;
+		this.comparator = comparator;
+		
+		for (E val : elements)
+			insert(val);
+		
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
 	public void insert(E value) {
 		root = insert(root, value);
 		size += 1;
 	}
 	
 	/**
-	 * Insert <code>value</code> into the subtree rooted at <code>node</code>
 	 * 
-	 * @param node The root of the subtree for an insertion
-	 * @param value The value to insert into the subtree
-	 * @return The updated root of the subtree with the element inserted
 	 */
-	protected abstract Node insert(Node node, E value);
-	
+	@Override
+	protected Node insert(Node node, E value) {
+		
+		if (node == null) 
+			return new Node(value);
+		
+		if (comparator.compare(value, node.value) < 0)
+			node.left =  insert(node.left, value);
+		else if (comparator.compare(value, node.value) > 0)
+			node.right = insert(node.right, value);
+		
+		return node;
+		
+	}
+
 	/**
-	 * Wrapper function to delete the given value from the tree
-	 * starting at the root
 	 * 
-	 * @param value The value to search and remove
-	 * @throws IllegalStateException The tree is empty when the method is called to remove an element
 	 */
+	@Override
 	public void delete(E value) {
-		
-		if (size == 0)
-			throw new IllegalStateException("Cannot delete an element from an empty tree.");
-		
 		root = delete(root, value);
 		size -= 1;
-		
 	}
 	
 	/**
-	 * Deletes the given value from the subtree rooted at <code>code</code>
-	 * Updates heights on the way back up and rotates as needed
-	 * to maintain the tree in AVL form
 	 * 
-	 * @param node The root of the subtree to remove the value from
-	 * @param value The value to remove from the tree
-	 * @return The updated root of the subtree with the given value removed
 	 */
-	protected abstract Node delete(Node node, E value);
-	
-	/**
-	 * Utility function to obtain a usable height 
-	 * of the subtree rooted at the parameter node
-	 * 
-	 * @param n The root node of the subtree in question
-	 * @return The height of the subtree, or 0 if the root is null
-	 */
-	protected int height(Node node) {
-		
-		if (node == null) return 0;
-		return node.height;
-		
-	}
-	
-	/**
-	 * Utility function to obtain a usable balance factor 
-	 * of the subtree rooted at the parameter node
-	 * 
-	 * @param n The root node of the subtree in question
-	 * @return The balance factor of the subtree (height of left - height of right),
-	 * 		   or 0 if the root is null
-	 */
-	protected int balance(Node node) {
-		
-		if (node == null) return 0;
-		return height(node.left) - height(node.right);
-		
-	}
-	
-	/**
-	 * Accessor method for the size of the tree
-	 * 
-	 * @return The size of the tree
-	 */
-	public int size() {
-		return size;
-	}
-	
-	/**
-	 * Whether or not the tree is empty
-	 * 
-	 * @return A boolean value signifying if the tree is empty
-	 */
-	public boolean isEmpty() {
-		return size == 0;
-	}
-	
-	/**
-	 * Displays the entire tree to the terminal in the
-	 * natural ordering of the elements
-	 */
-	public void display() {
-		display(root);
-	}
-	
-	/**
-	 * Displays the elements of the tree rooted at <code>node</code>
-	 * to the terminal in the natural ordering of the elements
-	 * 
-	 * @param node The root node of the subtree being displayed
-	 */
-	private void display(Node node) {
-		
-		if (node == null) return;
-		
-		display(node.left);
-		System.out.println(node.value);
-		display(node.right);
-		
-	}
-	
-	/**
-	 * Used to store relevant information
-	 * to a single node within a binary search tree
-	 */
-	protected class Node {
-		
-		E value;
-		int height;
-		Node left, right;
-		Node parent;
-		
-		Node(E val) {
-			value = val;
-			height = 1;
-			left = right = parent = null;
+	@Override
+	protected Node delete(Node node, E value) {
+
+		if (value.compareTo(node.value) < 0)
+			node.left = delete(node.left, value);
+		else if (value.compareTo(node.value) > 0)
+			node.right = delete(node.right, value);
+		else if (node.right == null && node.left == null)
+			return null;
+		else if (node.right != null) {
+			
+			Node succ = node.right;
+			while (succ.left != null)
+				succ = succ.left;
+			
+			node.value = succ.value;
+			node.right = delete(node.right, succ.value);
+			
 		}
+		else if (node.left != null) {
+			
+			Node succ = node.left;
+			while (succ.right != null)
+				succ = succ.right;
+			
+			node.value = succ.value;
+			node.left = delete(node.left, succ.value);
+			
+		}
+		
+		return node;
 		
 	}
 	
