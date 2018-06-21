@@ -36,10 +36,16 @@ public abstract class Tree<E> {
 		
 		E value;
 		Object[] children;
+		Node parent;
+		int height;
+		
+		public Node() {}
 		
 		public Node(E value) {
 			this.value = value;
 			children = new Object[degree];
+			parent = null;
+			height = 1;
 		}
 		
 		/**
@@ -49,7 +55,7 @@ public abstract class Tree<E> {
 		 * @return The root of the subtree that is the ith child of the tree
 		 */
 		@SuppressWarnings("unchecked")
-		public Node get(int i) {
+		public Node getChild(int i) {
 			return (Node) children[i];
 		}
 		

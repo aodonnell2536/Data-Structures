@@ -1,9 +1,16 @@
 package structs;
 
-import java.util.InputMismatchException;
+// TODO : Make this a binary tree, and create separate 
+//		  file for a binary search tree class with a comparator
 
+/***
+ * Abstract implementation of a Binary Search Tree
+ * 
+ * @author Austin O'Donnell
+ * @param <E> 
+ */
 public abstract class BinarySearchTree<E extends Comparable<E>> 
-					  extends Tree<E>{
+					  									extends Tree<E>{
 
 	/*
 	 * Fields
@@ -58,54 +65,6 @@ public abstract class BinarySearchTree<E extends Comparable<E>>
 	 * @return The updated root of the subtree with the given value removed
 	 */
 	protected abstract Node delete(Node node, E value);
-	
-	/**
-	 * Performs a right rotation with the parameter node as the pivot
-	 * 
-	 * @param node The pivot node of the rotation
-	 * @return The updated node at the same position of the pivot node
-	 */
-	protected Node rightRotate(Node node) {
-		
-		if (node.left == null)
-			throw new InputMismatchException("Cannot right rotate node when it has no left child.");
-		
-		Node temp1 = node.left;
-		Node temp2 = temp1.right;
-		
-		node.left = temp2;
-		temp1.right = node;
-		
-		node.height = 1 + Math.max(height(node.left), height(node.right));
-		temp1.height = 1 + Math.max(height(temp1.left), height(temp1.right));
-		
-		return temp1;
-		
-	}
-	
-	/**
-	 * Performs a left rotation with the parameter node as the pivot
-	 * 
-	 * @param node The pivot node of the rotation
-	 * @return The updated node at the same position of the pivot node
-	 */
-	protected Node leftRotate(Node node) {
-		
-		if (node.right == null)
-			throw new InputMismatchException("Cannot left rotate node when it has no right child.");
-		
-		Node temp1 = node.right;
-		Node temp2 = temp1.left;
-		
-		node.right = temp2;
-		temp1.left = node;
-		
-		node.height = Math.max(height(node.left), height(node.right));
-		temp1.height = 1 + Math.max(height(temp1.left), height(temp1.right));
-		
-		return temp1;
-		
-	}
 	
 	/**
 	 * Utility function to obtain a usable height 
@@ -187,11 +146,12 @@ public abstract class BinarySearchTree<E extends Comparable<E>>
 		E value;
 		int height;
 		Node left, right;
+		Node parent;
 		
 		Node(E val) {
 			value = val;
 			height = 1;
-			left = right = null;
+			left = right = parent = null;
 		}
 		
 	}
