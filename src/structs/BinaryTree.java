@@ -57,10 +57,17 @@ public abstract class BinaryTree<E>
 	 */
 	protected abstract Node delete(Node node, E value);
 	
+	/**
+	 * 
+	 */
 	protected void display() {
 		display(root);
 	}
 	
+	/**
+	 * 
+	 * @param node
+	 */
 	private void display(Node node) {
 		if (node == null) return;
 		display(node.left);
@@ -68,8 +75,40 @@ public abstract class BinaryTree<E>
 		display(node.right);
 	}
 	
+	/**
+	 * 
+	 * @param node
+	 * @return
+	 */
 	protected int height(Node node) {
 		return (node == null) ? 0 : node.height;
+	}
+	
+	/**
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public boolean contains(E value) {
+		return contains(root, value);
+	}
+	
+	/**
+	 * 
+	 * @param node
+	 * @param value
+	 * @return
+	 */
+	private boolean contains(Node node, E value) {
+		
+		if (node == null)
+			return false;
+		
+		if (node.value == value) 
+			return true;
+		
+		return contains(node.left, value) || contains(node.right, value);
+		
 	}
 	
 }

@@ -152,6 +152,8 @@ public class AVLTree<E extends Comparable<E>>
 		tree.insert(18);
 		tree.delete(5);
 		tree.display();
+		System.out.println(tree.contains(3));
+		System.out.println(tree.contains(5));
 		
 	}
 	
