@@ -1,5 +1,6 @@
 package structs;
 
+import java.util.Comparator;
 import java.util.InputMismatchException;
 
 /***
@@ -13,12 +14,15 @@ import java.util.InputMismatchException;
 public class AVLTree<E extends Comparable<E>> 
 			 					extends BinarySearchTree<E> {
 	
-	/*
-	 * Constructor
+	/**
+	 * 
 	 */
 	public AVLTree() { 
-		this.root = null; 
-		size = 0; 
+		super();
+	}
+	
+	public AVLTree(Comparator<E> comparator) {
+		super(comparator);
 	}
 	
 	/**

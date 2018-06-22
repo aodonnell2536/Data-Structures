@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class BinarySearchTree<E extends Comparable<E>> 
-								extends BinaryTree<E> {
+										extends BinaryTree<E> {
 
 	/**
 	 * 
@@ -18,6 +18,7 @@ public class BinarySearchTree<E extends Comparable<E>>
 		size = 0;
 		root = null;
 		this.comparator = (o1, o2) -> o1.compareTo(o2);
+		elements = new Object[1];
 	}
 	
 	/**
@@ -28,6 +29,7 @@ public class BinarySearchTree<E extends Comparable<E>>
 		size = 0;
 		root = null;
 		this.comparator = comparator;
+		elements = new Object[1];
 	}
 	
 	/**
@@ -35,14 +37,10 @@ public class BinarySearchTree<E extends Comparable<E>>
 	 * @param elements
 	 */
 	public BinarySearchTree(List<E> elements) {
-		
 		size = 0;
 		root = null;
 		this.comparator = (o1, o2) -> o1.compareTo(o2);
-		
-		for (E val : elements)
-			root = insert(root, val);
-		
+		this.elements = elements.toArray();
 	}
 	
 	/**
@@ -51,14 +49,10 @@ public class BinarySearchTree<E extends Comparable<E>>
 	 * @param comparator
 	 */
 	public BinarySearchTree(List<E> elements, Comparator<E> comparator) {
-		
 		size = 0;
 		root = null;
 		this.comparator = comparator;
-		
-		for (E val : elements)
-			insert(val);
-		
+		this.elements = elements.toArray();
 	}
 	
 	/**
@@ -158,7 +152,11 @@ public class BinarySearchTree<E extends Comparable<E>>
 	@Override
 	public Tree<E> merge(Tree<E> other) {
 		
+		if (!(other instanceof BinarySearchTree<?>))
+			throw new IllegalStateException("Parameter must be of type BinarySearchTree<?>");
+		
 		return null;
+		
 	}
 	
 }

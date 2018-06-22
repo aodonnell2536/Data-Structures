@@ -43,4 +43,11 @@ public interface Tree<E> {
 	 */
 	public Tree<E> merge(Tree<E> other);
 	
+	/**
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public boolean contains(E value);
+	
 }
