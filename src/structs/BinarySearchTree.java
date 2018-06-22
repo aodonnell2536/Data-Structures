@@ -133,5 +133,32 @@ public class BinarySearchTree<E extends Comparable<E>>
 		return node;
 		
 	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public int height() {
+		
+		return 0;
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public int size() {
+		
+		return 0;
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public Tree<E> merge(Tree<E> other) {
+		
+		return null;
+	}
 	
 }

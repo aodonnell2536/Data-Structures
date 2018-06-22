@@ -1,7 +1,7 @@
 package structs;
 
 public abstract class BinaryTree<E>
-							extends Tree<E> {
+							implements Tree<E> {
 	
 	/**
 	 * 
